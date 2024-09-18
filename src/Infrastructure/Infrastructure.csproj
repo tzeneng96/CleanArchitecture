@@ -3,6 +3,7 @@
   <PropertyGroup>
     <RootNamespace>CleanArchitecture.Infrastructure</RootNamespace>
     <AssemblyName>CleanArchitecture.Infrastructure</AssemblyName>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <!--#if ('True' == 'False')-->
@@ -34,6 +35,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Services.Client" />
   </ItemGroup>
 
   <ItemGroup>
