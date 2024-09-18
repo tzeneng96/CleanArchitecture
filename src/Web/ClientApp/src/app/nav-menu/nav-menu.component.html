@@ -1,43 +1,72 @@
-<header>
-  <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-    <div class="container">
-      <a class="navbar-brand" [routerLink]="['/']">CleanArchitecture.Web</a>
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target=".navbar-collapse"
-        aria-label="Toggle navigation"
-        [attr.aria-expanded]="isExpanded"
-        (click)="toggle()"
-      >
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="navbar-collapse collapse d-sm-inline-flex justify-content-end"
-           [ngClass]="{ show: isExpanded }">
-        <ul class="navbar-nav flex-grow">
-          <li class="nav-item"
-              [routerLinkActive]="['link-active']"
-              [routerLinkActiveOptions]="{ exact: true }">
-            <a class="nav-link text-dark" [routerLink]="['/']">Home</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/counter']">Counter</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/fetch-data']">Fetch data</a>
-          </li>
-          <li class="nav-item" [routerLinkActive]="['link-active']">
-            <a class="nav-link text-dark" [routerLink]="['/todo']">Todo</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark" href="/api" target="_blank">API</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link text-dark" href="/Identity/Account/Manage">Account</a>
-          </li>
-        </ul>
+<mat-toolbar style="position: sticky; top: 0; z-index: 999; height: 100px !important; background-color:orangered">
+  <div fxLayout="row" fxLayoutAlign="start start" style="width: 100%">
+    <div fxLayout="row" fxLayoutGap="10px">
+      <div fxLayout="row"
+           fxLayoutGap="10px"
+           style="cursor: pointer;"
+           fxLayoutAlign="start center"
+           [routerLink]="['']"
+           class="nav-brand">
+        <img style="padding-left:20px" src="assets/icons/logo.png" alt="BPLogo" height="60" />
+        <h2 style="padding-top:0px; color:white;">User System</h2>
       </div>
     </div>
-  </nav>
-</header>
+    <!--<div fxLayout="row"
+         fxLayoutGap="5px"
+         fxLayoutAlign="end center"
+         style="cursor: pointer">
+
+      <div class="container-profile">
+        <img class="avatar"
+             [src]="'/assets/icons/empty.jpg'"
+             alt="User picture"
+             height="40"
+             [matMenuTriggerFor]="profileMenu"
+             width="40" />
+      </div>
+      <mat-menu #profileMenu="matMenu">
+        <div mat-menu-item>{{ user?.userName }}</div>
+        <button mat-menu-item (click)="openProfileDialog()">Profile</button>
+        <button *ngIf="
+         user?.role == 'Administrator' ||
+         user?.role == 'Support' ||
+         user?.role == 'Lab' ||
+         user?.role == 'Lab Admin'
+       "
+                mat-menu-item
+                [routerLink]="['/settings/options']">
+          Setting
+        </button>
+        <button *ngIf="user?.role == 'Administrator' || user?.role == 'Support'"
+                mat-menu-item
+                [routerLink]="['/tools']">
+          Support Tools
+        </button>
+        <div *ngFor="let l of links" mat-menu-item class="mobile-menu">
+          <div *ngIf="l.path">
+            <div [routerLink]="[l.path]" matRipple>
+              <span>{{ l.title }} </span>
+            </div>
+          </div>
+          <div *ngIf="!l.path">
+            <div [matMenuTriggerFor]="mobileExpand"
+                 matRipple
+                 (click)="$event.preventDefault(); $event.stopPropagation()">
+              <span>{{ l.title }} </span>
+              <mat-icon style="cursor: pointer">expand_more</mat-icon>
+            </div>
+            <mat-menu #mobileExpand="matMenu">
+              <button mat-menu-item
+                      *ngFor="let c of l.children"
+                      [routerLink]="[c.path]">
+                {{ c.title }}
+              </button>
+            </mat-menu>
+          </div>
+        </div>
+        <hr style="color: #f0f0f0" />
+        <button mat-menu-item (click)="logout()">Logout</button>
+      </mat-menu>
+    </div>-->
+  </div>
+</mat-toolbar>

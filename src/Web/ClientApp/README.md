@@ -1,27 +1,70 @@
-# CleanArchitecture.Web
+# Etiqa Architecture Demo #
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.2.8.
+## Technologies
+* .NET 8.0
+* Entity Framework Core 8.0
+* Angular 17
+* MediatR
 
-## Development server
+## Getting Started
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+1. Rename the Project to kick start new project development
+2. Ensure the following files are updated
+- Solution
+- Namespace
 
-## Code scaffolding
+### Database Configuration
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+The template is configured to use an in-memory database by default. This ensures that all users will be able to run the solution without needing to set up additional infrastructure (e.g. SQL Server).
 
-## Build
+Verify that the **DefaultConnection** connection string within **appsettings.json** points to a valid SQL Server instance. 
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+When you run the application the database will be automatically created (if necessary) and the latest migrations will be applied.
 
-## Running unit tests
+### Database Migrations
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+To use `dotnet-ef` for your migrations please add the following flags to your command (values assume you are executing from repository root)
 
-## Running end-to-end tests
+- `--project src/Infrastructure` (optional if in this folder)
+- `--startup-project src/Web`
+- `--output-dir Data/Migrations`
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+For example, to add a new migration from the root folder:
 
-## Further help
+```
+dotnet ef migrations add "SampleMigration" --project src\Infrastructure --startup-project src\Web --output-dir Data\Migrations
+```
+```
+dotnet ef database update --project src/Infrastructure --startup-project src/Web
+```
+```
+dotnet ef migrations remove --project src/Infrastructure --startup-project src/Web
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+For example, to remove last migrations:
+
+```
+dotnet ef database update LAST_KNOWN_MIGRATION --project src/Infrastructure --startup-project src/Web && dotnet ef migrations remove --project src/Infrastructure --startup-project src/Web
+```
+
+## Overview
+
+### Domain
+
+This will contain all entities, enums, exceptions, interfaces, types and logic specific to the domain layer.
+
+### Application
+
+This layer contains all application logic. It is dependent on the domain layer, but has no dependencies on any other layer or project. This layer defines interfaces that are implemented by outside layers. For example, if the application need to access a notification service, a new interface would be added to application and an implementation would be created within infrastructure.
+
+
+### Infrastructure
+
+This layer contains classes for accessing external resources such as file systems, web services, smtp, and so on. These classes should be based on interfaces defined within the application layer.
+
+### Web
+
+This layer is a single page application based on Angular 17 and ASP.NET Core 3.1. This layer depends on both the Application and Infrastructure layers, however, the dependency on Infrastructure is only to support dependency injection. Therefore only *Startup.cs* should reference Infrastructure.
+
+
+

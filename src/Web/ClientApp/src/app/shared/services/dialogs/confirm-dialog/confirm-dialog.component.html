@@ -1,0 +1,21 @@
+<h1 mat-dialog-title *ngIf="title">
+  {{ title }}
+</h1>
+<div mat-dialog-content>
+  <span>{{ message }}</span>
+</div>
+<div mat-dialog-actions fxLayoutAlign="end">
+  <button mat-button
+          #closeBtn
+          (keydown.arrowright)="acceptBtn.focus()"
+          (click)="cancel()">
+    {{ cancelButton }}
+  </button>
+  <button mat-button
+          [color]="isDestructive ? 'warn' : 'accent'"
+          #acceptBtn
+          (keydown.arrowleft)="closeBtn.focus()"
+          (click)="accept()">
+    {{ acceptButton }}
+  </button>
+</div>

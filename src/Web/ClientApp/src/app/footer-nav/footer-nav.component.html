@@ -1,0 +1,13 @@
+<mat-divider class="hidePrint"></mat-divider>
+<div fxLayout="column" fxLayoutAlign="space-around center" class="w-100 mt-3 mb-3 hidePrint">
+  <div fxLayout="row" fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="10px">
+    <span style="font-size: 11px;">&copy; Copyright {{ now | date: 'yyyy' }} | Hiew Tze Neng </span>
+    <div *ngFor="let item of navLinks">
+      <a href="{{ item.url }}" target="_blank">
+        <img *ngIf="item.src" src="{{ item.src }}" />
+      </a>
+      <a style="margin: 10px 30px 10px 0 ; font-size: 12px; " href="{{ item.url }}" target="_blank">{{ item.title }}</a>
+    </div>
+    <span style="font-size: 11px;">Version 1.0.0</span>
+  </div>
+</div>

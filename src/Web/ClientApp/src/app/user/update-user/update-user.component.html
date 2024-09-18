@@ -1,0 +1,46 @@
+<div fxLayout="row" fxLayoutGap="10px" style="text-align:center; margin:150px; margin-left:500px">
+  <mat-card fxLayout="row" fxFill="100" fxLayoutAlign="start start" style="background-color: orangered; color:white">
+    <span style="text-align:center; margin-top:15px">Update User</span>
+  </mat-card>
+
+  <div fxLayout="column" fxFill="100" fxLayoutGap="10">
+    <mat-card>
+      <mat-card-content fxLayout="row">
+        <div fxLayout="row" fxLayoutGap="50px" fxLayoutAlign="start start" style="height:50px;">
+          <label style="margin-right:10px">Username:</label>
+          <input fxLayout="row" type="text" matInput [(ngModel)]="model.userName" />
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start" style="height:50px">
+          <label style="margin-right:10px">Email:</label>
+          <input fxLayout="row" fxFill="80" type="text" matInput [(ngModel)]="model.email" />
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start" style="height:50px">
+          <label style="margin-right:10px">Phone:</label>
+          <input fxLayout="row" fxFill="80" type="text" matInput [(ngModel)]="model.phoneNumber" />
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start" style="height:50px">
+          <label style="margin-right:10px">Hobby:</label>
+          <input fxLayout="row" fxFill="80" type="text" matInput [(ngModel)]="model.hobby" />
+        </div>
+        <div fxLayout="column" fxLayoutGap="10px" fxLayoutAlign="start start" style="height:50px">
+          <label style="margin-right:10px">Skillsets:</label>
+          <input fxLayout="row" fxFill="80" type="text" matInput [(ngModel)]="model.skillsets" />
+        </div>
+        <div fxLayoutAlign="center center" fxFlex>
+          <button [routerLink]="['/user']" mat-raised-button>
+            <mat-icon>
+              apps
+            </mat-icon>
+            View UserList
+          </button>
+          <button (click)="updateUser()" mat-raised-button>
+            <mat-icon>
+              keyboard_capslock
+            </mat-icon>
+            Update User
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

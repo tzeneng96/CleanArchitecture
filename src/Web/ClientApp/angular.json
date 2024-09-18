@@ -74,7 +74,6 @@
               "buildTarget": "CleanArchitecture.Web:build:production"
             },
             "development": {
-              "proxyConfig": "proxy.conf.js",
               "buildTarget": "CleanArchitecture.Web:build:development"
             }
           },

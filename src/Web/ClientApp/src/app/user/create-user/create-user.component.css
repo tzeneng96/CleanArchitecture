@@ -1,0 +1,80 @@
+/* send-memo.component.css */
+
+mat-card {
+  max-width: 800px;
+  min-height: 50px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+
+.childComponent {
+  font-size: 15px;
+  color: white;
+  background-color: red
+}
+
+mat-card-content {
+  display: flex;
+  flex-direction: column;
+}
+
+div {
+  margin-bottom: 20px;
+}
+
+label {
+  font-weight: bold;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 150px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+button {
+  margin-top: 20px;
+}
+
+/* Styling for file input */
+mat-form-field {
+  display: block;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.mat-form-field-wrapper {
+  display: flex;
+  align-items: center;
+}
+
+.mat-form-field-infix {
+  width: 100%;
+}
+
+
+
+
+.mat-file-input-label:not(:empty) + .mat-icon-button {
+  margin-left: 12px;
+}
+
+/* Responsive styles */
+@media screen and (max-width: 1024px) {
+  mat-card {
+    max-width: 90%;
+    margin: 50px auto;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  mat-card {
+    max-width: 100%;
+    box-shadow: none;
+  }
+}

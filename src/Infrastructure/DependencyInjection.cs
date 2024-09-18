@@ -20,6 +20,7 @@ public static class DependencyInjection
 
         services.AddScoped<ISaveChangesInterceptor, AuditableEntityInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DispatchDomainEventsInterceptor>();
+        services.AddScoped<ILoginService, LoginService>();
 
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
