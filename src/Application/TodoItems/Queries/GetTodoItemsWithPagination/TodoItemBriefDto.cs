@@ -8,7 +8,7 @@ public class TodoItemBriefDto
 
     public int ListId { get; init; }
 
-    public string? Title { get; init; }
+    public string Title { get; init; }
 
     public bool Done { get; init; }
 

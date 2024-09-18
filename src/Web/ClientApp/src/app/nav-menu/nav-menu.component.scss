@@ -17,3 +17,87 @@ html {
 .box-shadow {
   box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
+
+.full-width {
+  width: 100%;
+}
+
+.avatar {
+  border-radius: 50px
+}
+
+.active-link {
+  border-bottom: #27ae60 3px solid;
+}
+
+.nav-link {
+  /* margin-top: 12px; */
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.beta {
+  background-color: #2c3e50;
+  border-radius: 2px;
+  padding: 0.2em;
+  font-size: 10px;
+  color: white;
+}
+
+.title {
+  font-size: 14px;
+}
+
+:host::ng-deep .mat-form-field-wrapper {
+  padding: 0;
+  height: 18px;
+}
+
+:host::ng-deep .mat-form-field-flex > .mat-form-field-infix {
+  padding: 0.4em 0px !important;
+}
+
+:host::ng-deep .mat-form-field-label-wrapper {
+  top: -1.5em;
+}
+
+:host::ng-deep .mat-form-field-appearance-outline.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label {
+  transform: translateY(-1.1em) scale(.75);
+  width: 133.33333%;
+}
+
+:host::ng-deep .mat-form-field-appearance-outline .mat-form-field-flex {
+  margin-top: -.94em;
+  height: 41px;
+}
+
+.bp-category-select ::ng-deep .mat-form-field-outline-end {
+  border-radius: 0 !important;
+}
+
+.search-button:hover {
+  background-color: rgba(0,0,0,.12);
+}
+
+@media only screen and (max-width: 767px) {
+  .nav-menu-item {
+    content-visibility: hidden;
+    margin: 0 !important;
+  }
+
+  .nav-brand {
+    margin-right: 0 !important;
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .brand-title {
+    content-visibility: hidden;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .mobile-menu {
+    display: none !important;
+  }
+}

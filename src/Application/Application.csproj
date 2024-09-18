@@ -3,6 +3,7 @@
   <PropertyGroup>
     <RootNamespace>CleanArchitecture.Application</RootNamespace>
     <AssemblyName>CleanArchitecture.Application</AssemblyName>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -10,10 +11,15 @@
     <PackageReference Include="AutoMapper" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.Extensions.Identity.Core" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Authentication\Queries\" />
   </ItemGroup>
 
 </Project>

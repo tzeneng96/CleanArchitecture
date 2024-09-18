@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Models;
 using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Application.Common.Behaviours;
@@ -41,7 +42,11 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 
             if (!string.IsNullOrEmpty(userId))
             {
-                userName = await _identityService.GetUserNameAsync(userId);
+                UserModel userModel = await _identityService.GetUserAsync(userId);
+                if (userModel != null)
+                {
+                    userName = userModel.UserName;
+                }
             }
 
             _logger.LogWarning("CleanArchitecture Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@UserName} {@Request}",

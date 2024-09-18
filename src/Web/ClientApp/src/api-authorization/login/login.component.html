@@ -1,0 +1,91 @@
+<div class="container"
+     fxLayout="column"
+     fxFlexFill
+     fxLayoutAlign="center center">
+  <mat-card fxLayout="column" class="login-container mat-elevation-z2">
+    <mat-list>
+      <div fxLayout="column" fxLayoutAlign="center center">
+        <div fxLayout="row"
+             fxLayoutGap="10px"
+             fxLayoutAlign="center center"
+             class="full-width">
+        </div>
+        <div fxLayout="column" class="mt-2">
+          <span style="text-align: center; font-size: medium; font-weight: 500"></span>
+          <span style="text-align: center"> User System </span>
+        </div>
+        <div fxLayout="column"
+             fxLayoutAlign="center center"
+             *ngIf="!externalLogin">
+          <button mat-stroked-button
+                  color="primary"
+                  (click)="externalLogin = !externalLogin"
+                  class="mt-2 mb-2">
+            <mat-icon>lock</mat-icon>
+            External Login
+          </button>
+        </div>
+      </div>
+      <div [hidden]="!externalLogin">
+        <mat-divider></mat-divider>
+        <form [formGroup]="loginFormGroup" fxFlexFill>
+          <div fxLayout="column" class="p-2">
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label> Username </mat-label>
+              <input placeholder="Email"
+                     formControlName="email"
+                     matInput
+                     required />
+            </mat-form-field>
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label> Password </mat-label>
+              <input placeholder="Password"
+                     matInput
+                     formControlName="password"
+                     type="password"
+                     required />
+            </mat-form-field>
+            <div class="full-width"
+                 fxLayout="column"
+                 fxLayoutAlign="center center"
+                 fxLayoutGap="10px">
+              <mat-spinner *ngIf="loading" [diameter]="20"></mat-spinner>
+              <div fxLayout="row"
+                   fxLayoutGap="5px"
+                   class="full-width"
+                   *ngIf="!loading">
+                <button fxFlex="grow"
+                        mat-flat-button
+                        color="primary"
+                        (click)="validateCaptcha()"
+                        [disabled]="!loginFormGroup.valid">
+                  Login
+                </button>
+              </div>
+              <div fxFlex="grow" id="gbtn"></div>
+            </div>
+            <mat-divider class="m-2"></mat-divider>
+            <div fxLayout="row" fxLayoutGap="2px" fxLayoutAlign="center center">
+              <img src=""
+                   style="height: auto; width: 20px" />
+              <img src=""
+                   style="height: auto; width: 20px" />
+            </div>
+            <small class="text-muted mt" fxFlexAlign="center">
+              {{ now | date : "yyyy" }} | v{{ version }}
+            </small>
+            <!-- <div
+              class="p-1 mt-3 mb-1"
+              style="font-size: 12px"
+              fxLayout="row"
+              fxFlexFill
+              fxLayoutAlign="space-between center"
+            >
+              <a routerLink="/forgot-password"> Forgot your password? </a>
+            </div> -->
+          </div>
+        </form>
+      </div>
+    </mat-list>
+  </mat-card>
+</div>

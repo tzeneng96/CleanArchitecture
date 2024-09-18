@@ -4,13 +4,15 @@ namespace CleanArchitecture.Application.Common.Interfaces;
 
 public interface IIdentityService
 {
-    Task<string?> GetUserNameAsync(string userId);
-
-    Task<bool> IsInRoleAsync(string userId, string role);
+    Task<UserModel> GetUserAsync(string userId);
+    Task<PaginatedList<UserModel>> GetAllUsers(int pageNum, int pageSize, string searchString);
+    Task<bool> UserIsInRoleAsync(string userId, List<string> roles);
 
     Task<bool> AuthorizeAsync(string userId, string policyName);
 
-    Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password);
+    Task<(Result Result, string UserId)> CreateUserAsync(UserModel userModel, string password);
 
     Task<Result> DeleteUserAsync(string userId);
+    Task<Result> UpdateUserAsync(UserModel userModel);
+
 }

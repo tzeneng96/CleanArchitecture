@@ -1,4 +1,5 @@
 ﻿using CleanArchitecture.Application.Common.Interfaces;
+using CleanArchitecture.Application.Common.Models;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 
@@ -21,11 +22,15 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
     {
         var requestName = typeof(TRequest).Name;
         var userId = _user.Id ?? string.Empty;
-        string? userName = string.Empty;
+        string userName = string.Empty;
 
         if (!string.IsNullOrEmpty(userId))
         {
-            userName = await _identityService.GetUserNameAsync(userId);
+            UserModel userModel = await _identityService.GetUserAsync(userId);
+            if (userModel != null)
+            {
+                userName = userModel.UserName;
+            }
         }
 
         _logger.LogInformation("CleanArchitecture Request: {Name} {@UserId} {@UserName} {@Request}",
