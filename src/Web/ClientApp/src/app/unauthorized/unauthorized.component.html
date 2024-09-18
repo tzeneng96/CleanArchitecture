@@ -1,0 +1,11 @@
+<div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px" class="h-100">
+  <img src="../../assets/img/unauthorized.jpg" alt="Warning" style="width: 256px; height: 256px;">
+  <div style="width: 400px;">
+    <h1>401 - Unauthorize Page Access</h1>
+    <p>Sorry, but you do not have permission to access the requested page.</p>
+    <br />
+    <button mat-flat-button (click)="backClicked()" class="return-link" color="primary">Back</button>
+
+    <button mat-flat-button (click)="reloginClicked()" class="return-link" color="primary" style="margin-left: 15px;">Login with an authorized account</button>
+  </div>
+</div>

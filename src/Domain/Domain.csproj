@@ -3,6 +3,7 @@
   <PropertyGroup>
     <RootNamespace>CleanArchitecture.Domain</RootNamespace>
     <AssemblyName>CleanArchitecture.Domain</AssemblyName>
+    <Nullable>disable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

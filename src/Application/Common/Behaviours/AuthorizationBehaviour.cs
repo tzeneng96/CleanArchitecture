@@ -39,14 +39,11 @@ public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRe
 
                 foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
                 {
-                    foreach (var role in roles)
+                    var isInRole = await _identityService.UserIsInRoleAsync(_user.Id, roles.ToList());
+                    if (isInRole)
                     {
-                        var isInRole = await _identityService.IsInRoleAsync(_user.Id, role.Trim());
-                        if (isInRole)
-                        {
-                            authorized = true;
-                            break;
-                        }
+                        authorized = true;
+                        break;
                     }
                 }
 

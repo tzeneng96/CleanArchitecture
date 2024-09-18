@@ -1,53 +1,73 @@
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using System;
+using CleanArchitecture.Infrastructure.Identity;
 using CleanArchitecture.Infrastructure.Data;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddKeyVaultIfConfigured(builder.Configuration);
-
-builder.Services.AddApplicationServices();
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddWebServices();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace Doctor2U.LIS.WebUI
 {
-    await app.InitialiseDatabaseAsync();
+    public class Program
+    {
+        public async static Task Main(string[] args)
+        {
+            var host = CreateWebHostBuilder(args).Build();
+            using (var scope = host.Services.CreateScope())
+            {
+                var services = scope.ServiceProvider;
+
+                try
+                {
+                    var context = services.GetRequiredService<ApplicationDbContext>();
+
+                    if (context.Database.IsSqlServer())
+                    {
+                        context.Database.Migrate();
+                    }
+
+                    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                    //await ApplicationDbContextSeed.SeedCovidTest(context);
+                }
+                catch (Exception ex)
+                {
+                    var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+
+                    logger.LogError(ex, "An error occurred while migrating or seeding the database.");
+
+                    throw;
+                }
+            }
+
+            await host.RunAsync();
+        }
+
+        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+            new WebHostBuilder()
+              .UseKestrel()
+              .ConfigureAppConfiguration((hostingContext, config) =>
+              {
+                  var env = hostingContext.HostingEnvironment;
+                  config.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile($"appsettings.Local.json", optional: true, reloadOnChange: true)
+                        .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+                  config.AddEnvironmentVariables();
+                  config.AddUserSecrets<Program>(optional: true);
+              })
+            .ConfigureLogging((hostingContext, logging) =>
+            {
+                var env = hostingContext.HostingEnvironment;
+                if (!env.IsProduction())
+                {
+                    logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+                    logging.AddConsole();
+                    logging.AddDebug();
+                }
+            })
+            .UseStartup<Startup>();
+    }
 }
-else
-{
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
-
-app.UseHealthChecks("/health");
-app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseSwaggerUi(settings =>
-{
-    settings.Path = "/api";
-    settings.DocumentPath = "/api/specification.json";
-});
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
-
-app.MapRazorPages();
-
-app.MapFallbackToFile("index.html");
-
-app.UseExceptionHandler(options => { });
-
-#if (UseApiOnly)
-app.Map("/", () => Results.Redirect("/api"));
-#endif
-
-app.MapEndpoints();
-
-app.Run();
-
-public partial class Program { }
