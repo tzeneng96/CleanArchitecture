@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <!--#if (!UseApiOnly)-->
+    <TargetFramework>net8.0</TargetFramework>
     <SpaRoot>ClientApp\</SpaRoot>
-    <!--#endif-->
     <RootNamespace>CleanArchitecture.Web</RootNamespace>
     <AssemblyName>CleanArchitecture.Web</AssemblyName>
+    <AspNetCoreHostingModel>OutOfProcess</AspNetCoreHostingModel>
     <Nullable>disable</Nullable>
   </PropertyGroup>
 

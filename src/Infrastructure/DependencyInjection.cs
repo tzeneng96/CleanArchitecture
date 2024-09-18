@@ -52,6 +52,7 @@ public static class DependencyInjection
         services
             .AddDefaultIdentity<ApplicationUser>()
             .AddRoles<IdentityRole>()
+            .AddRoleManager<RoleManager<IdentityRole>>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 #endif
 

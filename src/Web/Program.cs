@@ -31,6 +31,10 @@ namespace Doctor2U.LIS.WebUI
                     }
 
                     var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+                    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+
+                    await ApplicationDbContextSeed.SeedDefaultRole(roleManager);
+                    await ApplicationDbContextSeed.SeedDefaultUserAsync(userManager);
                     //await ApplicationDbContextSeed.SeedCovidTest(context);
                 }
                 catch (Exception ex)
@@ -69,5 +73,6 @@ namespace Doctor2U.LIS.WebUI
                 }
             })
             .UseStartup<Startup>();
+
     }
 }
