@@ -38,16 +38,25 @@
     <PackageReference Include="FluentValidation.AspNetCore" />
   </ItemGroup>
 
-  <!--#if (!UseApiOnly)-->
   <ItemGroup>
     <!-- Don't publish the SPA source files, but do show them in the project files list -->
     <Content Remove="$(SpaRoot)**" />
     <None Remove="$(SpaRoot)**" />
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="ClientApp\src\app\shared\components\" />
-  </ItemGroup>
+  </ItemGroup>  
+
+
+  <!-- Auto-generated Open API specification and Angular TypeScript clients -->
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+
+
+  <Target Name="NSwag" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+    <Copy SourceFiles="@(Reference)" DestinationFolder="$(OutDir)References" />
+    <Exec Command="nswag run /variables:Configuration=$(Configuration) /runtime:Net80" />
+    <RemoveDir Directories="$(OutDir)References" />
+  </Target>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
@@ -58,44 +67,23 @@
     <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
   </Target>
-  <!--#endif-->
 
-  <!-- Auto-generated Open API specification and Angular TypeScript clients -->
-  <PropertyGroup>
-    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-  </PropertyGroup>
-
-  <Target Name="NSwag" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug' And '$(SkipNSwag)' != 'True' ">
-    <Exec ConsoleToMSBuild="true" ContinueOnError="true" WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run config.nswag /variables:Configuration=$(Configuration)">
-      <Output TaskParameter="ExitCode" PropertyName="NSwagExitCode" />
-      <Output TaskParameter="ConsoleOutput" PropertyName="NSwagOutput" />
-    </Exec>
-
-    <Message Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' == '0'" Importance="low" />
-    <Error Text="$(NSwagOutput)" Condition="'$(NSwagExitCode)' != '0'" />
-  </Target>
-
-  <!--#if (!UseApiOnly)-->
   <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
-    <!--#if (UseAngular)-->
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --configuration production" />
-    <!--#endif-->
-    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build" Condition="'$(UseReact)' == 'True'" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm install --force" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --configuration staging" Condition="'$(Configuration)' == 'Staging'" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build -- --configuration production" Condition="'$(Configuration)' == 'Release'" />
+    <Exec WorkingDirectory="$(SpaRoot)" Command="npm run build:ssr -- --configuration production" Condition=" '$(BuildServerSideRenderer)' == 'true' " />
 
     <!-- Include the newly-built files in the publish output -->
     <ItemGroup>
-      <!--#if (UseAngular)-->
       <DistFiles Include="$(SpaRoot)dist\**; $(SpaRoot)dist-server\**" />
-      <!--#endif-->
-      <DistFiles Include="$(SpaRoot)build\**" Condition="'$(UseReact)' == 'True'" />
+      <DistFiles Include="$(SpaRoot)node_modules\**" Condition="'$(BuildServerSideRenderer)' == 'true'" />
       <ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-        <RelativePath>wwwroot\%(RecursiveDir)%(FileName)%(Extension)</RelativePath>
+        <RelativePath>%(DistFiles.Identity)</RelativePath>
         <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
         <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
       </ResolvedFileToPublish>
     </ItemGroup>
   </Target>
-  <!--#endif-->
 </Project>
