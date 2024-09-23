@@ -1,0 +1,110 @@
+name: Build Source Files
+
+on:
+  pull_request:
+    branches: ["development"]
+  workflow_dispatch:
+
+jobs:
+  build-API:
+    runs-on: windows-latest
+    outputs:
+      build-status: ${{ steps.set-output.outputs.build-status }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+      - name: Restore dependencies
+        run: dotnet restore
+      - name: Build
+        id: build
+        run: dotnet build --configuration Release --nox-restore
+      - name: Set output
+        if: always()
+        id: set-output
+        shell: bash
+        run: echo build-status=${{ steps.build.outcome }} >> $GITHUB_OUTPUT
+  build-UI:
+    runs-on: ubuntu-latest
+    outputs:
+      build-status: ${{ steps.set-output.outputs.build-status }}
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "18.x"
+      - name: Cache node_modules
+        uses: actions/cache@v2
+        with:
+          path: ./src/WebUI/ClientApp
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        working-directory: ./src/WebUI/ClientApp
+        run: npm ci --force
+      - name: Build
+        id: build
+        working-directory: ./src/WebUI/ClientApp
+        run: npm run build -- --configuration production
+      - name: Set output
+        if: always()
+        id: set-output
+        run: echo build-status=${{ steps.build.outcome }} >> $GITHUB_OUTPUT
+  summary:
+    runs-on: ubuntu-latest
+    needs: [build-API, build-UI]
+    if: always()
+    steps:
+      - name: Get outputs
+        run: |
+          echo 'Build UI - ${{ needs.build-UI.outputs.build-status }}'
+          echo 'Build API - ${{ needs.build-API.outputs.build-status }}'
+      - name: Remove labels
+        uses: actions/github-script@v4
+        continue-on-error: true
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "verification-success"
+            });
+            github.issues.removeLabel({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "verification-failed"
+            });
+      - name: Add success label
+        # check if output fromn previous job is true
+        if: needs.build-UI.outputs.build-status == 'success' && needs.build-API.outputs.build-status == 'success'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["verification-success"]
+            });
+
+      - name: Add fail label
+        # check if output fromn previous job is false
+        if: needs.build-UI.outputs.build-status == 'failure' || needs.build-API.outputs.build-status == 'failure'
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ["verification-failed"]
+            });
