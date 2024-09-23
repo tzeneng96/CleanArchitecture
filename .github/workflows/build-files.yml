@@ -2,7 +2,7 @@ name: Build Source Files
 
 on:
   pull_request:
-    branches: ["development"]
+    branches: ["Development"]
   workflow_dispatch:
 
 jobs:
